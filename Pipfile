@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pygame = "~=2.5"
+numpy = "~=1.25"
+python-dotenv = "~=1.0"
+
+[dev-packages]
+black = "~=23.3"
+isort = "~=5.12"
+mypy = "~=1.4"
+flake8 = "~=6.0"
+pytest = "~=7.4"
+pytest-cov = "~=4.1"
+
+[requires]
+python_version = "3.11"
+
+[scripts]
+test = 'python -m pytest -vx'
