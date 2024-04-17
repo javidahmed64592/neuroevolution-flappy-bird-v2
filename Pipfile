@@ -4,7 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-
+genetic-algorithm = {editable = true, git = "https://github.com/javidahmed64592/genetic-algorithm"}
+neural-network = {editable = true, git = "https://github.com/javidahmed64592/neural-network"}
 
 [dev-packages]
 isort = "*"
@@ -14,3 +15,6 @@ mypy = "*"
 
 [requires]
 python_version = "3.11"
+
+[scripts]
+main = "python main.py"
