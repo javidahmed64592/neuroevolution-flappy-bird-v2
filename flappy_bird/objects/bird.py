@@ -4,9 +4,9 @@ from typing import List
 
 import numpy as np
 import pygame
-from genetic_algorithm.ga import Member
-from neural_network.math.matrix import Matrix
-from neural_network.neural_network import NeuralNetwork
+from genetic_algorithm.ga import Member  # type: ignore
+from neural_network.math.matrix import Matrix  # type: ignore
+from neural_network.neural_network import NeuralNetwork  # type: ignore
 from numpy.typing import NDArray
 
 
@@ -18,6 +18,7 @@ class Bird(Member):
     GRAV = 1
     LIFT = -20
     MIN_VELOCITY = -10
+    X_LIM = 1000
     Y_LIM = 1000
 
     def __init__(self, x: int, y: int, size: int, nn_layer_sizes: List[int]) -> None:
@@ -143,7 +144,7 @@ class Bird(Member):
         """
         if not self._alive:
             return
-        pygame.draw.rect(screen, self._colour, self.rect)
+        pygame.draw.rect(screen, self._colour.tolist(), self.rect)
 
     def update(self):
         """
