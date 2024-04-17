@@ -4,8 +4,8 @@ from typing import List
 
 import numpy as np
 import pygame
-from genetic_algorithm.ga import GeneticAlgorithm
-from neural_network.neural_network import NeuralNetwork
+from genetic_algorithm.ga import GeneticAlgorithm  # type: ignore
+from neural_network.neural_network import NeuralNetwork  # type: ignore
 
 from flappy_bird.objects.bird import Bird
 
@@ -15,25 +15,25 @@ class FlappyBirdGA(GeneticAlgorithm):
     Simple app to use genetic algorithms to solve an alphanumeric phrase.
     """
 
-    def __init__(self, mutation_rate: int) -> None:
+    def __init__(self, mutation_rate: float) -> None:
         """
         Initialise FlappyBirdGA.
 
         Parameters:
-            mutation_rate (int): Population mutation rate
+            mutation_rate (float): Population mutation rate
         """
         super().__init__(mutation_rate)
 
     @property
     def num_alive(self) -> int:
         _alive_array = np.array([_bird._alive for _bird in self._population._population])
-        return np.sum(_alive_array)
+        return int(np.sum(_alive_array))
 
     @classmethod
     def create(
         cls,
         population_size: int,
-        mutation_rate: int,
+        mutation_rate: float,
         x: int,
         y: int,
         size: int,
@@ -46,7 +46,7 @@ class FlappyBirdGA(GeneticAlgorithm):
 
         Parameters:
             population_size (int): Number of members in population
-            mutation_rate (int): Mutation rate for members
+            mutation_rate (float): Mutation rate for members
             x (int): x coordinate of bird's start position
             y (int): y coordinate of bird's start position
             size (int): Size of bird
