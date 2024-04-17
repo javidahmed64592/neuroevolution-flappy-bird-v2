@@ -166,9 +166,3 @@ class Bird(Member):
             return
 
         self._score += 1
-
-    def apply_new_chromosome(self) -> None:
-        """
-        Apply new chromosome from crossover to Bird.
-        """
-        self.chromosome = self._new_chromosome
