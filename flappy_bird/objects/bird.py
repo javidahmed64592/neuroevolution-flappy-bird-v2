@@ -148,3 +148,10 @@ class Bird(Member):
             return
 
         self._score += 1
+
+    def _apply_new_chromosome(self):
+        """
+        Apply new chromosome and reset to start position.
+        """
+        self._chromosome = self._new_chromosome
+        self.reset()

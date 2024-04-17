@@ -80,25 +80,3 @@ class FlappyBirdApp(GeneticAlgorithm):
         _max_fitness_text = f"Max Fitness: {self._population.best_fitness}"
         _avg_fitness_text = f"Average Fitness: {np.average(self._population._population_fitness)}"
         print(f"{_gen_text} \t{_max_fitness_text} \t{_avg_fitness_text}")
-
-    def _reset(self) -> None:
-        for _bird in self._population._population:
-            _bird.reset()
-
-    def run(self) -> None:
-        """
-        Run the evolution process.
-        """
-        self._running = True
-        self._generation = 1
-
-        try:
-            while self._running:
-                self._evaluate()
-                self._analyse()
-                self._evolve()
-                self._reset()
-                self._generation += 1
-        except KeyboardInterrupt:
-            self._running = False
-            return
