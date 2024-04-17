@@ -1,33 +1,46 @@
 from __future__ import annotations
 
+import sys
 from typing import List
 
-import numpy as np
-from genetic_algorithm.ga import GeneticAlgorithm
-from neural_network.neural_network import NeuralNetwork
+import pygame
+from pygame.locals import QUIT
 
+from flappy_bird.flappy_bird_ga import FlappyBirdGA
 from flappy_bird.objects.bird import Bird
 from flappy_bird.pg.app import App
 
 
-class FlappyBirdApp(GeneticAlgorithm):
+class FlappyBirdApp(App):
     """
     Simple app to use genetic algorithms to solve an alphanumeric phrase.
     """
 
-    def __init__(self, mutation_rate: int) -> None:
+    def __init__(self, fps: int) -> None:
         """
-        Initialise PhraseSolver app.
+        Initialise FlappyBirdGA.
 
         Parameters:
-            mutation_rate (int)
+            mutation_rate (int): Population mutation rate
         """
-        super().__init__(mutation_rate)
+        super().__init__(fps)
         self._lifetime: int
 
+    @property
+    def screen(self):
+        return self._display_surf
+
     @classmethod
-    def create_and_run(
-        cls,
+    def create_app(
+        cls, name: str, width: int, height: int, fps: int, font: str, font_size: int, lifetime: int
+    ) -> FlappyBirdApp:
+        Bird.Y_LIM = height
+        fba: FlappyBirdApp = super().create_app(name, width, height, fps, font, font_size)
+        fba._lifetime = lifetime
+        return fba
+
+    def add_ga(
+        self,
         population_size: int,
         mutation_rate: int,
         x: int,
@@ -36,10 +49,9 @@ class FlappyBirdApp(GeneticAlgorithm):
         nn_layer_sizes: List[int],
         weights_range: List[float],
         bias_range: List[float],
-        lifetime: int,
-    ) -> FlappyBirdApp:
+    ) -> None:
         """
-        Create app and run genetic algorithm.
+        Add genetic algorithm to app.
 
         Parameters:
             population_size (int): Number of members in population
@@ -50,33 +62,39 @@ class FlappyBirdApp(GeneticAlgorithm):
             nn_layer_sizes (List[int]): Neural network layer sizes
             weights_range (List[float]): Range for random weights
             bias_range (List[float]): Range for random bias
-            lifetime (int): Number of iterations before
 
         Returns:
-            ga (PhraseSolver): Phrase solver app
+            flappy_bird (FlappyBirdGA): Flappy Bird app
         """
-        ga = cls(mutation_rate)
-        NeuralNetwork.WEIGHTS_RANGE = weights_range
-        NeuralNetwork.BIAS_RANGE = bias_range
-        ga._add_population([Bird(x, y, size, nn_layer_sizes) for _ in range(population_size)])
-        ga._lifetime = lifetime
-        ga.run()
-        return ga
+        self._ga = FlappyBirdGA.create(
+            population_size, mutation_rate, x, y, size, nn_layer_sizes, weights_range, bias_range
+        )
 
-    def _evaluate(self) -> None:
+    def update(self) -> None:
         """
-        Evaluate the population.
+        Move all birds and analyse population.
         """
-        for _ in range(self._lifetime):
-            for _bird in self._population._population:
-                _bird.update()
-        self._population.evaluate()
+        self._ga._evaluate()
 
-    def _analyse(self) -> None:
+    def run(self) -> None:
         """
-        Analyse best member's chromosome.
+        Run the application and handle events.
         """
-        _gen_text = f"Generation {self._generation:>4}:"
-        _max_fitness_text = f"Max Fitness: {self._population.best_fitness}"
-        _avg_fitness_text = f"Average Fitness: {np.average(self._population._population_fitness)}"
-        print(f"{_gen_text} \t{_max_fitness_text} \t{_avg_fitness_text}")
+        _count = 0
+        while True:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            self._display_surf.fill((0, 0, 0))
+
+            if _count == self._lifetime:
+                self._ga._analyse()
+                self._ga._evolve()
+                _count = 0
+
+            _count += 1
+            self.update()
+            pygame.display.update()
+            self._clock.tick(self._fps)
