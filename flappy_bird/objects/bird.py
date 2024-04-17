@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import List
 
 import numpy as np
+import pygame
 from genetic_algorithm.ga import Member
 from neural_network.math.matrix import Matrix
 from neural_network.neural_network import NeuralNetwork
@@ -44,6 +45,7 @@ class Bird(Member):
 
         self._score = 0
         self._alive = True
+        self._colour = np.random.randint(low=0, high=256, size=3)
 
     @property
     def num_inputs(self) -> int:
@@ -62,7 +64,7 @@ class Bird(Member):
         return [self._nn.weights, self._nn.bias]
 
     @chromosome.setter
-    def chromosome(self, new_chromosome: List[Matrix]) -> None:
+    def chromosome(self, new_chromosome: List[List[Matrix]]) -> None:
         self._nn.weights = new_chromosome[0]
         self._nn.bias = new_chromosome[1]
 
@@ -73,6 +75,10 @@ class Bird(Member):
     @property
     def nn_input(self) -> NDArray:
         return np.array([self._y / self.Y_LIM])
+
+    @property
+    def rect(self) -> pygame.Rect:
+        return pygame.Rect(self._x, self._y, self._size, self._size)
 
     @property
     def offscreen(self) -> bool:
@@ -102,7 +108,7 @@ class Bird(Member):
             _new_weights.append(_new_weight)
             _new_biases.append(_new_bias)
 
-        self._new_chromosome = [_new_weights, _new_bias]
+        self._new_chromosome = [_new_weights, _new_biases]
 
     def reset(self):
         """
@@ -128,6 +134,17 @@ class Bird(Member):
         self._velocity = max(self._velocity, self.MIN_VELOCITY)
         self._y += self._velocity
 
+    def draw(self, screen: pygame.Surface) -> None:
+        """
+        Draw bird on the display.
+
+        Parameter:
+            screen (Surface): Screen to draw bird to
+        """
+        if not self._alive:
+            return
+        pygame.draw.rect(screen, self._colour, self.rect)
+
     def update(self):
         """
         Use neural network to determine whether or not bird should jump, and kill if it collides with a Pipe.
@@ -149,9 +166,8 @@ class Bird(Member):
 
         self._score += 1
 
-    def _apply_new_chromosome(self):
+    def apply_new_chromosome(self) -> None:
         """
-        Apply new chromosome and reset to start position.
+        Apply new chromosome from crossover to Bird.
         """
-        self._chromosome = self._new_chromosome
-        self.reset()
+        self.chromosome = self._new_chromosome

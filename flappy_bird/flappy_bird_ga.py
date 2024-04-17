@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import List
 
 import numpy as np
+import pygame
 from genetic_algorithm.ga import GeneticAlgorithm
 from neural_network.neural_network import NeuralNetwork
 
@@ -22,6 +23,11 @@ class FlappyBirdGA(GeneticAlgorithm):
             mutation_rate (int): Population mutation rate
         """
         super().__init__(mutation_rate)
+
+    @property
+    def num_alive(self) -> int:
+        _alive_array = np.array([_bird._alive for _bird in self._population._population])
+        return np.sum(_alive_array)
 
     @classmethod
     def create(
@@ -57,12 +63,13 @@ class FlappyBirdGA(GeneticAlgorithm):
         flappy_bird._add_population([Bird(x, y, size, nn_layer_sizes) for _ in range(population_size)])
         return flappy_bird
 
-    def _evaluate(self) -> None:
+    def _evaluate(self, screen: pygame.Surface) -> None:
         """
         Evaluate the population.
         """
         for _bird in self._population._population:
             _bird.update()
+            _bird.draw(screen)
         self._population.evaluate()
 
     def _analyse(self) -> None:
@@ -73,3 +80,10 @@ class FlappyBirdGA(GeneticAlgorithm):
         _max_fitness_text = f"Max Fitness: {self._population.best_fitness}"
         _avg_fitness_text = f"Average Fitness: {np.average(self._population._population_fitness)}"
         print(f"{_gen_text} \t{_max_fitness_text} \t{_avg_fitness_text}")
+
+    def reset(self) -> None:
+        """
+        Reset all Birds.
+        """
+        for _bird in self._population._population:
+            _bird.reset()
