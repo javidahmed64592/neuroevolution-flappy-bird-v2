@@ -14,14 +14,19 @@ class FlappyBirdApp(App):
     This class creates a version of Flappy Bird and uses neuroevolution to train AI to play the game.
     """
 
-    def __init__(self, fps: int) -> None:
+    def __init__(self, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> None:
         """
         Initialise FlappyBirdApp.
 
         Parameters:
-            fps (int): Application FPS
+            name (str): App name
+            width (int): Screen width
+            height (int): Screen height
+            fps (int): Game FPS
+            font (str): Font style
+            font_size (int): Font size
         """
-        super().__init__(fps)
+        super().__init__(name, width, height, fps, font, font_size)
         self._lifetime: int
         self._count = 0
 

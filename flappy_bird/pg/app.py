@@ -1,20 +1,35 @@
 from __future__ import annotations
 
-import sys
-
 import pygame
 from pygame.locals import QUIT
 
 
 class App:
-    def __init__(self, fps: int) -> None:
+    """
+    This class can be used to create a Pygame application.
+
+    Override the `update()` method and optionally the `run()` method to create a specific app.
+    """
+
+    def __init__(self, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> None:
         """
-        Initialise application and set FPS.
+        Initialise App and set parameters.
 
         Parameters:
-            fps (int): Application FPS
+            name (str): App name
+            width (int): Screen width
+            height (int): Screen height
+            fps (int): Game FPS
+            font (str): Font style
+            font_size (int): Font size
         """
+        self._name = name
+        self._width = width
+        self._height = height
         self._fps = fps
+        self._font = font
+        self._font_size = font_size
+        self._running = False
 
     @classmethod
     def create_app(cls, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> App:
@@ -33,52 +48,18 @@ class App:
             _app (App): App with screen, clock, and font set.
         """
         pygame.init()
-        _app = cls(fps=fps)
-        _app._add_clock()
-        _app._set_screen_name(name=name)
-        _app._create_screen(width=width, height=height)
-        _app._set_font(font=font, font_size=font_size)
-        return _app
+        app = cls(name=name, width=width, height=height, fps=fps, font=font, font_size=font_size)
+        app._configure()
+        return app
 
-    def _add_clock(self) -> None:
+    def _configure(self) -> None:
         """
-        Add a Pygame clock.
+        Configure Pygame application.
         """
-        self._clock = pygame.time.Clock()
-
-    def _create_screen(self, width: int, height: int) -> None:
-        """
-        Create and configure application screen dimensions.
-
-        Parameters:
-            width (int): Screen width
-            height (int): Screen height
-        """
-        self._width = width
-        self._height = height
-        self._display_surf = pygame.display.set_mode((self._width, self._height))
-
-    def _set_screen_name(self, name: str) -> None:
-        """
-        Set screen name.
-
-        Parameters:
-            name (str): Screen name
-        """
-        self._name = name
         pygame.display.set_caption(self._name)
-
-    def _set_font(self, font: str, font_size: int) -> None:
-        """
-        Set application font.
-
-        Parameters:
-            font (str): Font style to use
-            font_size (int): Font size for text
-        """
-        self._font = font
-        self._font_size = font_size
-        self._pg_font = App.create_font(self._font, self._font_size)
+        self._display_surf = pygame.display.set_mode((self._width, self._height))
+        self._pg_font = pygame.font.SysFont(self._font, self._font_size)
+        self._clock = pygame.time.Clock()
 
     def write_text(self, text: str, x: float, y: float) -> None:
         """
@@ -89,8 +70,8 @@ class App:
             x (float): x coordinate of text's position
             y (float): y coordinate of text's position
         """
-        text_to_write = self._pg_font.render(text, False, (255, 255, 255))
-        self._display_surf.blit(text_to_write, (x, y))
+        _text = self._pg_font.render(text, False, (255, 255, 255))
+        self._display_surf.blit(_text, (x, y))
 
     def update(self) -> None:
         """
@@ -110,28 +91,16 @@ class App:
         """
         Run the application and handle events.
         """
-        while True:
+        self._running = True
+        while self._running:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
-                    sys.exit()
+                    self._running = False
+                    return
 
             self._display_surf.fill((0, 0, 0))
 
             self.update()
             pygame.display.update()
             self._clock.tick(self._fps)
-
-    @staticmethod
-    def create_font(font: str, size: int) -> pygame.font.Font:
-        """
-        Create a Pygame font.
-
-        Parameters:
-            font (str): Font style
-            size (int): Font size
-
-        Returns:
-            (Font): Pygame font
-        """
-        return pygame.font.SysFont(font, size)
