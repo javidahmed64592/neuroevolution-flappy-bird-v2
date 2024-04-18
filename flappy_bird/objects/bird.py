@@ -21,7 +21,7 @@ class Bird(Member):
     X_LIM = 1000
     Y_LIM = 1000
 
-    def __init__(self, x: int, y: int, size: int, nn_layer_sizes: List[int]) -> None:
+    def __init__(self, x: int, y: int, size: int, hidden_layer_sizes: List[int]) -> None:
         """
         Initialise bird with a starting position, a width and a height.
 
@@ -29,7 +29,7 @@ class Bird(Member):
             x (int): x coordinate of bird's start position
             y (int): y coordinate of bird's start position
             size (int): size of bird
-            nn_layer_sizes (List[int]): Neural network layer sizes
+            hidden_layer_sizes (List[int]): Neural network hidden layer sizes
         """
         super().__init__()
         self._x = x
@@ -37,28 +37,16 @@ class Bird(Member):
         self._y = y
         self._start_y = y
         self._velocity = 0
-
         self._size = size
-        self._nn_layer_sizes = nn_layer_sizes
-        self._nn = NeuralNetwork(
-            num_inputs=self.num_inputs, num_outputs=self.num_outputs, hidden_layer_sizes=self.hidden_layer_sizes
-        )
+        self._nn = NeuralNetwork(len(self.nn_input), 2, hidden_layer_sizes)
 
         self._score = 0
         self._alive = True
         self._colour = np.random.randint(low=0, high=256, size=3)
 
     @property
-    def num_inputs(self) -> int:
-        return self._nn_layer_sizes[0]
-
-    @property
-    def num_outputs(self) -> int:
-        return self._nn_layer_sizes[-1]
-
-    @property
-    def hidden_layer_sizes(self) -> List[int]:
-        return self._nn_layer_sizes[1:-1]
+    def nn_input(self) -> NDArray:
+        return np.array([self._y / self.Y_LIM])
 
     @property
     def chromosome(self) -> List[List[Matrix]]:
@@ -74,12 +62,16 @@ class Bird(Member):
         return self._score**2
 
     @property
-    def nn_input(self) -> NDArray:
-        return np.array([self._y / self.Y_LIM])
-
-    @property
     def rect(self) -> pygame.Rect:
         return pygame.Rect(self._x, self._y, self._size, self._size)
+
+    @property
+    def velocity(self) -> int:
+        return self._velocity
+
+    @velocity.setter
+    def velocity(self, new_velocity: int) -> None:
+        self._velocity = max(new_velocity, self.MIN_VELOCITY)
 
     @property
     def offscreen(self) -> bool:
@@ -110,12 +102,13 @@ class Bird(Member):
             _new_biases.append(_new_bias)
 
         self._new_chromosome = [_new_weights, _new_biases]
+        self._colour = np.average([self._colour, parent_a._colour, parent_b._colour], axis=0, weights=[0.7, 0.15, 0.15])
 
     def reset(self):
         """
         Reset to start positions.
         """
-        self._velocity = 0
+        self.velocity = 0
         self._x = self._start_x
         self._y = self._start_y
         self._score = 0
@@ -125,19 +118,18 @@ class Bird(Member):
         """
         Make bird 'jump' by accelerating upwards.
         """
-        self._velocity += self.LIFT
+        self.velocity += self.LIFT
 
     def move(self) -> None:
         """
         Update bird's position and velocity.
         """
-        self._velocity += self.GRAV
-        self._velocity = max(self._velocity, self.MIN_VELOCITY)
-        self._y += self._velocity
+        self.velocity += self.GRAV
+        self._y += self.velocity
 
     def draw(self, screen: pygame.Surface) -> None:
         """
-        Draw bird on the display.
+        Draw Bird on the display.
 
         Parameter:
             screen (Surface): Screen to draw bird to
@@ -160,7 +152,6 @@ class Bird(Member):
 
         self.move()
 
-        # If bird collides with pipe, kill and return
         if self.offscreen:
             self._alive = False
             return
