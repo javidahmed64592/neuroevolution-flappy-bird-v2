@@ -72,15 +72,6 @@ class FlappyBirdGA(GeneticAlgorithm):
             _bird.draw(screen)
         self._population.evaluate()
 
-    def _analyse(self) -> None:
-        """
-        Analyse best member's chromosome.
-        """
-        _gen_text = f"Generation {self._generation:>4}:"
-        _max_fitness_text = f"Max Fitness: {self._population.best_fitness}"
-        _avg_fitness_text = f"Average Fitness: {np.average(self._population._population_fitness)}"
-        print(f"{_gen_text} \t{_max_fitness_text} \t{_avg_fitness_text}")
-
     def reset(self) -> None:
         """
         Reset all Birds.
