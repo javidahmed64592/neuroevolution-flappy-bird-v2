@@ -45,12 +45,16 @@ class App:
             font_size (int): Font size
 
         Returns:
-            _app (App): App with screen, clock, and font set.
+            app (App): App with screen, clock, and font set.
         """
         pygame.init()
-        app = cls(name=name, width=width, height=height, fps=fps, font=font, font_size=font_size)
+        app = cls(name, width, height, fps, font, font_size)
         app._configure()
         return app
+
+    @property
+    def screen(self) -> pygame.Surface:
+        return self._display_surf
 
     def _configure(self) -> None:
         """
@@ -77,15 +81,15 @@ class App:
         """
         Display application information to screen.
         """
-        start_x = 50
-        start_y = 50
-        self.write_text("App info:", start_x, start_y)
-        self.write_text(f"Name: {self._name}", start_x, start_y * 3)
-        self.write_text(f"Width: {self._width}", start_x, start_y * 4)
-        self.write_text(f"Height: {self._height}", start_x, start_y * 5)
-        self.write_text(f"Font: {self._font}", start_x, start_y * 6)
-        self.write_text(f"Font size: {self._font_size}", start_x, start_y * 7)
-        self.write_text(f"FPS: {self._clock.get_fps()}", start_x, start_y * 9)
+        _start_x = 50
+        _start_y = 50
+        self.write_text("App info:", _start_x, _start_y)
+        self.write_text(f"Name: {self._name}", _start_x, _start_y * 3)
+        self.write_text(f"Width: {self._width}", _start_x, _start_y * 4)
+        self.write_text(f"Height: {self._height}", _start_x, _start_y * 5)
+        self.write_text(f"Font: {self._font}", _start_x, _start_y * 6)
+        self.write_text(f"Font size: {self._font_size}", _start_x, _start_y * 7)
+        self.write_text(f"FPS: {self._clock.get_fps()}", _start_x, _start_y * 9)
 
     def run(self) -> None:
         """

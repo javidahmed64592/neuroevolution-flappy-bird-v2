@@ -37,7 +37,7 @@ class FlappyBirdGA(GeneticAlgorithm):
         x: int,
         y: int,
         size: int,
-        nn_layer_sizes: List[int],
+        hidden_layer_sizes: List[int],
         weights_range: List[float],
         bias_range: List[float],
     ) -> FlappyBirdGA:
@@ -50,7 +50,7 @@ class FlappyBirdGA(GeneticAlgorithm):
             x (int): x coordinate of bird's start position
             y (int): y coordinate of bird's start position
             size (int): Size of bird
-            nn_layer_sizes (List[int]): Neural network layer sizes
+            hidden_layer_sizes (List[int]): Neural network hidden layer sizes
             weights_range (List[float]): Range for random weights
             bias_range (List[float]): Range for random bias
 
@@ -60,12 +60,15 @@ class FlappyBirdGA(GeneticAlgorithm):
         flappy_bird = cls(mutation_rate)
         NeuralNetwork.WEIGHTS_RANGE = weights_range
         NeuralNetwork.BIAS_RANGE = bias_range
-        flappy_bird._add_population([Bird(x, y, size, nn_layer_sizes) for _ in range(population_size)])
+        flappy_bird._add_population([Bird(x, y, size, hidden_layer_sizes) for _ in range(population_size)])
         return flappy_bird
 
     def _evaluate(self, screen: pygame.Surface) -> None:
         """
         Evaluate the population.
+
+        Parameters:
+            screen (Surface): Screen to draw Birds to
         """
         for _bird in self._population._population:
             _bird.update()

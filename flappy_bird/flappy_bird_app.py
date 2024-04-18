@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import List, cast
 
-import pygame
-
 from flappy_bird.flappy_bird_ga import FlappyBirdGA
 from flappy_bird.objects.bird import Bird
 from flappy_bird.pg.app import App
@@ -31,8 +29,8 @@ class FlappyBirdApp(App):
         self._count = 0
 
     @property
-    def screen(self) -> pygame.Surface:
-        return self._display_surf
+    def max_count(self) -> int:
+        return self._lifetime * self._fps
 
     @classmethod
     def create_game(
@@ -59,6 +57,16 @@ class FlappyBirdApp(App):
         fba._lifetime = lifetime
         return fba
 
+    def _write_stats(self) -> None:
+        """
+        Write algorithm statistics to screen.
+        """
+        _start_x = 20
+        _start_y = 30
+        self.write_text(f"Generation: {self._ga._generation}", _start_x, _start_y)
+        self.write_text(f"Birds alive: {self._ga.num_alive}", _start_x, _start_y * 3)
+        self.write_text(f"Score: {int(self._count / self._fps)}", _start_x, _start_y * 4)
+
     def add_ga(
         self,
         population_size: int,
@@ -66,7 +74,7 @@ class FlappyBirdApp(App):
         x: int,
         y: int,
         size: int,
-        nn_layer_sizes: List[int],
+        hidden_layer_sizes: List[int],
         weights_range: List[float],
         bias_range: List[float],
     ) -> None:
@@ -79,19 +87,19 @@ class FlappyBirdApp(App):
             x (int): x coordinate of bird's start position
             y (int): y coordinate of bird's start position
             size (int): Size of bird
-            nn_layer_sizes (List[int]): Neural network layer sizes
+            hidden_layer_sizes (List[int]): Neural network hidden layer sizes
             weights_range (List[float]): Range for random weights
             bias_range (List[float]): Range for random bias
         """
         self._ga = FlappyBirdGA.create(
-            population_size, mutation_rate, x, y, size, nn_layer_sizes, weights_range, bias_range
+            population_size, mutation_rate, x, y, size, hidden_layer_sizes, weights_range, bias_range
         )
 
     def update(self) -> None:
         """
         Run genetic algorithm, update Birds and draw to screen.
         """
-        if int(self._count) == (self._lifetime * self._fps) or self._ga.num_alive == 0:
+        if self._count == self.max_count or self._ga.num_alive == 0:
             self._ga._analyse()
             self._ga._evolve()
             self._ga.reset()
@@ -99,14 +107,4 @@ class FlappyBirdApp(App):
 
         self._ga._evaluate(self.screen)
         self._count += 1
-        self.write_stats()
-
-    def write_stats(self) -> None:
-        """
-        Write algorithm statistics to screen.
-        """
-        start_x = 20
-        start_y = 30
-        self.write_text(f"Generation: {self._ga._generation}", start_x, start_y)
-        self.write_text(f"Birds alive: {self._ga.num_alive}", start_x, start_y * 3)
-        self.write_text(f"Score: {int(self._count / self._fps)}", start_x, start_y * 4)
+        self._write_stats()
