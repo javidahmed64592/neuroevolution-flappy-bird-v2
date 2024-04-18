@@ -90,7 +90,10 @@ class Bird(Member):
         _new_biases = []
 
         _zipped_chromosomes = zip(
-            parent_a.chromosome[0], parent_b.chromosome[0], parent_a.chromosome[1], parent_b.chromosome[1]
+            parent_a.chromosome[0],
+            parent_b.chromosome[0],
+            parent_a.chromosome[1],
+            parent_b.chromosome[1],
         )
         for pa_weights, pb_weights, pa_bias, pb_bias in _zipped_chromosomes:
             _new_weight = Matrix.average_matrix(pa_weights, pb_weights)
@@ -102,7 +105,11 @@ class Bird(Member):
             _new_biases.append(_new_bias)
 
         self._new_chromosome = [_new_weights, _new_biases]
-        self._colour = np.average([self._colour, parent_a._colour, parent_b._colour], axis=0, weights=[0.7, 0.15, 0.15])
+        self._colour = np.average(
+            [self._colour, parent_a._colour, parent_b._colour],
+            axis=0,
+            weights=[0.7, 0.15, 0.15],
+        )
 
     def reset(self):
         """
