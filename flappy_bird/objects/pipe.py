@@ -10,14 +10,13 @@ class Pipe:
     """
 
     WIDTH = 50
-    SPACING = 220
+    SPACING = 200
     START_SPEED = 3.5
     MAX_SPEED = 11
     ACC_SPEED = 0.03
     START_SPAWNTIME = 120
     MIN_SPAWNTIME = 80
     ACC_SPAWNTIME = 1
-    MIN_HEIGHT = 20
     COLOUR: ClassVar = [0, 200, 0]
     X_LIM: float
     Y_LIM: float
@@ -30,7 +29,7 @@ class Pipe:
             speed (float): Pipe movement speed
         """
         self._x = self.X_LIM
-        self._top_height = np.random.uniform(low=self.MIN_HEIGHT, high=(self.Y_LIM - self.MIN_HEIGHT - self.SPACING))
+        self._top_height = np.random.uniform(low=self.SPACING, high=(self.Y_LIM - self.SPACING - self.SPACING))
         self._bottom_height = self.Y_LIM - self._top_height + self.SPACING
         self._speed = speed
 
