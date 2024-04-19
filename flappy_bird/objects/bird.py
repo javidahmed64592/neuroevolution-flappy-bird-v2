@@ -45,11 +45,11 @@ class Bird(Member):
 
     @property
     def nn_input(self) -> NDArray:
-        _nn_input = np.array([0, 0, 0])
+        _nn_input = np.array([self.velocity / self.MIN_VELOCITY, 0, 0, 0])
         if self._closest_pipe:
-            _nn_input[0] = (self._closest_pipe._x - self.X) / self.X_LIM
-            _nn_input[1] = (self._closest_pipe._top_height - self._y) / self.Y_LIM
-            _nn_input[2] = (self._closest_pipe._bottom_height - self._y) / self.Y_LIM
+            _nn_input[1] = (self._closest_pipe._x - self.X) / self.X_LIM
+            _nn_input[2] = (self._closest_pipe._top_height - self._y) / self.Y_LIM
+            _nn_input[3] = (self._closest_pipe._bottom_height - self._y) / self.Y_LIM
         return _nn_input
 
     @property
