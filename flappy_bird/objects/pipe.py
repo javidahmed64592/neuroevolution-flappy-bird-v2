@@ -15,7 +15,7 @@ class Pipe:
     MAX_SPEED = 11
     ACC_SPEED = 0.03
     START_SPAWNTIME = 120
-    MIN_SPAWNTIME = 1
+    MIN_SPAWNTIME = 80
     ACC_SPAWNTIME = 1
     MIN_HEIGHT = 20
     COLOUR: ClassVar = [0, 255, 0]
