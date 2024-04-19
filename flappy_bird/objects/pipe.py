@@ -18,7 +18,7 @@ class Pipe:
     MIN_SPAWNTIME = 80
     ACC_SPAWNTIME = 1
     MIN_HEIGHT = 20
-    COLOUR: ClassVar = [0, 255, 0]
+    COLOUR: ClassVar = [0, 200, 0]
     X_LIM: float
     Y_LIM: float
 
