@@ -12,7 +12,7 @@ from numpy.typing import NDArray
 
 class Bird(Member):
     """
-    Bird to use in PhraseSolver app.
+    Bird to use in Flappy Bird app.
     """
 
     GRAV = 1
@@ -23,12 +23,12 @@ class Bird(Member):
 
     def __init__(self, x: int, y: int, size: int, hidden_layer_sizes: List[int]) -> None:
         """
-        Initialise bird with a starting position, a width and a height.
+        Initialise Bird with a starting position, a width and a height.
 
         Parameters:
-            x (int): x coordinate of bird's start position
-            y (int): y coordinate of bird's start position
-            size (int): size of bird
+            x (int): x coordinate of Bird's start position
+            y (int): y coordinate of Bird's start position
+            size (int): Size of Bird
             hidden_layer_sizes (List[int]): Neural network hidden layer sizes
         """
         super().__init__()
@@ -79,7 +79,7 @@ class Bird(Member):
 
     def crossover(self, parent_a: Bird, parent_b: Bird, mutation_rate: int) -> None:
         """
-        Crossover the chromosomes of two parents to create a new chromosome.
+        Crossover the chromosomes of two Birds to create a new chromosome.
 
         Parameters:
             parent_a (Member): Used to construct new chromosome
@@ -123,13 +123,13 @@ class Bird(Member):
 
     def jump(self) -> None:
         """
-        Make bird 'jump' by accelerating upwards.
+        Make Bird 'jump' by accelerating upwards.
         """
         self.velocity += self.LIFT
 
     def move(self) -> None:
         """
-        Update bird's position and velocity.
+        Update Bird's position and velocity.
         """
         self.velocity += self.GRAV
         self._y += self.velocity
@@ -138,8 +138,8 @@ class Bird(Member):
         """
         Draw Bird on the display.
 
-        Parameter:
-            screen (Surface): Screen to draw bird to
+        Parameters:
+            screen (Surface): Screen to draw Bird to
         """
         if not self._alive:
             return
@@ -147,7 +147,7 @@ class Bird(Member):
 
     def update(self):
         """
-        Use neural network to determine whether or not bird should jump, and kill if it collides with a Pipe.
+        Use neural network to determine whether or not Bird should jump, and kill if it collides with a Pipe.
         """
         if not self._alive:
             return
