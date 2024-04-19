@@ -57,9 +57,9 @@ class FlappyBirdGA(GeneticAlgorithm):
         Returns:
             flappy_bird (FlappyBirdGA): Flappy Bird app
         """
-        flappy_bird = cls([Bird(x, y, size, hidden_layer_sizes) for _ in range(population_size)], mutation_rate)
         NeuralNetwork.WEIGHTS_RANGE = weights_range
         NeuralNetwork.BIAS_RANGE = bias_range
+        flappy_bird = cls([Bird(x, y, size, hidden_layer_sizes) for _ in range(population_size)], mutation_rate)
         return flappy_bird
 
     def reset(self) -> None:
