@@ -108,7 +108,7 @@ class Bird(Member):
         self._colour = np.average(
             [self._colour, parent_a._colour, parent_b._colour],
             axis=0,
-            weights=[0.7, 0.15, 0.15],
+            weights=[0.98, 0.01, 0.01],
         )
 
     def reset(self):
