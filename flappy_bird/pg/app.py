@@ -74,7 +74,7 @@ class App:
             x (float): x coordinate of text's position
             y (float): y coordinate of text's position
         """
-        _text = self._pg_font.render(text, False, (255, 255, 255))
+        _text = self._pg_font.render(text, 1, (255, 255, 255))
         self._display_surf.blit(_text, (x, y))
 
     def update(self) -> None:

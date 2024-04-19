@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List
-
 import numpy as np
 import pygame
 from genetic_algorithm.ga import Member  # type: ignore
@@ -21,7 +19,7 @@ class Bird(Member):
     X_LIM = 1000
     Y_LIM = 1000
 
-    def __init__(self, x: int, y: int, size: int, hidden_layer_sizes: List[int]) -> None:
+    def __init__(self, x: int, y: int, size: int, hidden_layer_sizes: list[int]) -> None:
         """
         Initialise Bird with a starting position, a width and a height.
 
@@ -29,7 +27,7 @@ class Bird(Member):
             x (int): x coordinate of Bird's start position
             y (int): y coordinate of Bird's start position
             size (int): Size of Bird
-            hidden_layer_sizes (List[int]): Neural network hidden layer sizes
+            hidden_layer_sizes (list[int]): Neural network hidden layer sizes
         """
         super().__init__()
         self._x = x
@@ -49,11 +47,11 @@ class Bird(Member):
         return np.array([self._y / self.Y_LIM])
 
     @property
-    def chromosome(self) -> List[List[Matrix]]:
+    def chromosome(self) -> list[list[Matrix]]:
         return [self._nn.weights, self._nn.bias]
 
     @chromosome.setter
-    def chromosome(self, new_chromosome: List[List[Matrix]]) -> None:
+    def chromosome(self, new_chromosome: list[list[Matrix]]) -> None:
         self._nn.weights = new_chromosome[0]
         self._nn.bias = new_chromosome[1]
 
@@ -94,6 +92,7 @@ class Bird(Member):
             parent_b.chromosome[0],
             parent_a.chromosome[1],
             parent_b.chromosome[1],
+            strict=False,
         )
         for pa_weights, pb_weights, pa_bias, pb_bias in _zipped_chromosomes:
             _new_weight = Matrix.average_matrix(pa_weights, pb_weights)
@@ -111,7 +110,7 @@ class Bird(Member):
             weights=[0.98, 0.01, 0.01],
         )
 
-    def reset(self):
+    def reset(self) -> None:
         """
         Reset to start positions.
         """
@@ -145,7 +144,7 @@ class Bird(Member):
             return
         pygame.draw.rect(screen, self._colour.tolist(), self.rect)
 
-    def update(self):
+    def update(self) -> None:
         """
         Use neural network to determine whether or not Bird should jump, and kill if it collides with a Pipe.
         """

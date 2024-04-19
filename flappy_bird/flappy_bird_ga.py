@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List
-
 import numpy as np
 from genetic_algorithm.ga import GeneticAlgorithm  # type: ignore
 from neural_network.neural_network import NeuralNetwork  # type: ignore
@@ -37,9 +35,9 @@ class FlappyBirdGA(GeneticAlgorithm):
         x: int,
         y: int,
         size: int,
-        hidden_layer_sizes: List[int],
-        weights_range: List[float],
-        bias_range: List[float],
+        hidden_layer_sizes: list[int],
+        weights_range: list[float],
+        bias_range: list[float],
     ) -> FlappyBirdGA:
         """
         Create genetic algorithm and configure neural network.
@@ -50,9 +48,9 @@ class FlappyBirdGA(GeneticAlgorithm):
             x (int): x coordinate of bird's start position
             y (int): y coordinate of bird's start position
             size (int): Size of bird
-            hidden_layer_sizes (List[int]): Neural network hidden layer sizes
-            weights_range (List[float]): Range for random weights
-            bias_range (List[float]): Range for random bias
+            hidden_layer_sizes (list[int]): Neural network hidden layer sizes
+            weights_range (list[float]): Range for random weights
+            bias_range (list[float]): Range for random bias
 
         Returns:
             flappy_bird (FlappyBirdGA): Flappy Bird app
