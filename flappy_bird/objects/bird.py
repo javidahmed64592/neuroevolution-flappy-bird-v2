@@ -36,16 +36,21 @@ class Bird(Member):
         self._start_y = y
         self._velocity = 0
         self._size = size
+        self._closest_pipe: Pipe = None
         self._nn = NeuralNetwork(len(self.nn_input), 2, hidden_layer_sizes)
 
         self._score = 0
         self._alive = True
         self._colour = np.random.randint(low=0, high=256, size=3)
-        self._closest_pipe: Pipe
 
     @property
     def nn_input(self) -> NDArray:
-        return np.array([self._y / self.Y_LIM])
+        _nn_input = np.array([0, 0, 0])
+        if self._closest_pipe:
+            _nn_input[0] = (self._closest_pipe._x - self.X) / self.X_LIM
+            _nn_input[1] = (self._closest_pipe._top_height - self._y) / self.Y_LIM
+            _nn_input[2] = (self._closest_pipe._bottom_height - self._y) / self.Y_LIM
+        return _nn_input
 
     @property
     def chromosome(self) -> list[list[Matrix]]:
