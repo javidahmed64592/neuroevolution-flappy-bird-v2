@@ -19,7 +19,7 @@
         "genetic-algorithm": {
             "editable": true,
             "git": "https://github.com/javidahmed64592/genetic-algorithm",
-            "ref": "30d01b6febe1e4f5234b968bb1b56ea9aa0be3f8"
+            "ref": "d6385b816c41c963aef53755d75289e895b7d4f8"
         },
         "neural-network": {
             "editable": true,
