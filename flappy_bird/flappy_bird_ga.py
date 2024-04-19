@@ -14,14 +14,15 @@ class FlappyBirdGA(GeneticAlgorithm):
     Genetic algorithm for Flappy Bird training.
     """
 
-    def __init__(self, mutation_rate: float) -> None:
+    def __init__(self, birds: list[Bird], mutation_rate: float) -> None:
         """
         Initialise FlappyBirdGA with a mutation rate.
 
         Parameters:
+            birds (list[Bird]): Population of Birds
             mutation_rate (float): Population mutation rate
         """
-        super().__init__(mutation_rate)
+        super().__init__(birds, mutation_rate)
 
     @property
     def num_alive(self) -> int:
@@ -56,10 +57,9 @@ class FlappyBirdGA(GeneticAlgorithm):
         Returns:
             flappy_bird (FlappyBirdGA): Flappy Bird app
         """
-        flappy_bird = cls(mutation_rate)
+        flappy_bird = cls([Bird(x, y, size, hidden_layer_sizes) for _ in range(population_size)], mutation_rate)
         NeuralNetwork.WEIGHTS_RANGE = weights_range
         NeuralNetwork.BIAS_RANGE = bias_range
-        flappy_bird._add_population([Bird(x, y, size, hidden_layer_sizes) for _ in range(population_size)])
         return flappy_bird
 
     def reset(self) -> None:
