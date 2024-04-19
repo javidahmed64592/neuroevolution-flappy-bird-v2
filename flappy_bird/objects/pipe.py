@@ -19,7 +19,7 @@ class Pipe:
     ACC_SPAWNTIME = 0.1
     MIN_HEIGHT = 20
     COLOUR = [0, 255, 0]
-    START_X: float
+    X_LIM: float
     Y_LIM: float
 
     def __init__(self, speed: float) -> None:
@@ -29,7 +29,7 @@ class Pipe:
         Parameters:
             speed (float): Pipe movement speed
         """
-        self._x = self.START_X
+        self._x = self.X_LIM
         self._top_height = np.random.uniform(low=self.MIN_HEIGHT, high=(self.Y_LIM - self.MIN_HEIGHT - self.SPACING))
         self._bottom_height = self.Y_LIM - self._top_height + self.SPACING
         self._speed = speed
