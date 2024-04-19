@@ -11,12 +11,12 @@ from flappy_bird.objects.bird import Bird
 
 class FlappyBirdGA(GeneticAlgorithm):
     """
-    Simple app to use genetic algorithms to solve an alphanumeric phrase.
+    Genetic algorithm for Flappy Bird training.
     """
 
     def __init__(self, mutation_rate: float) -> None:
         """
-        Initialise FlappyBirdGA.
+        Initialise FlappyBirdGA with a mutation rate.
 
         Parameters:
             mutation_rate (float): Population mutation rate
@@ -41,7 +41,7 @@ class FlappyBirdGA(GeneticAlgorithm):
         bias_range: List[float],
     ) -> FlappyBirdGA:
         """
-        Create app with game and genetic algorithm variables.
+        Create genetic algorithm and configure neural network.
 
         Parameters:
             population_size (int): Number of members in population
