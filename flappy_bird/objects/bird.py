@@ -15,23 +15,21 @@ class Bird(Member):
 
     GRAV = 1
     LIFT = -20
+    X = 50
     MIN_VELOCITY = -10
     X_LIM = 1000
     Y_LIM = 1000
 
-    def __init__(self, x: int, y: int, size: int, hidden_layer_sizes: list[int]) -> None:
+    def __init__(self, y: int, size: int, hidden_layer_sizes: list[int]) -> None:
         """
         Initialise Bird with a starting position, a width and a height.
 
         Parameters:
-            x (int): x coordinate of Bird's start position
             y (int): y coordinate of Bird's start position
             size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
         """
         super().__init__()
-        self._x = x
-        self._start_x = x
         self._y = y
         self._start_y = y
         self._velocity = 0
@@ -61,7 +59,7 @@ class Bird(Member):
 
     @property
     def rect(self) -> pygame.Rect:
-        return pygame.Rect(self._x, self._y, self._size, self._size)
+        return pygame.Rect(self.X, self._y, self._size, self._size)
 
     @property
     def velocity(self) -> int:
@@ -115,7 +113,6 @@ class Bird(Member):
         Reset to start positions.
         """
         self.velocity = 0
-        self._x = self._start_x
         self._y = self._start_y
         self._score = 0
         self._alive = True
