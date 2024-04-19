@@ -1,4 +1,4 @@
-from typing import List
+from typing import ClassVar
 
 import numpy as np
 import pygame
@@ -14,11 +14,11 @@ class Pipe:
     START_SPEED = 3.5
     MAX_SPEED = 11
     ACC_SPEED = 0.03
-    START_SPAWNTIME = 3
+    START_SPAWNTIME = 120
     MIN_SPAWNTIME = 1
-    ACC_SPAWNTIME = 0.1
+    ACC_SPAWNTIME = 1
     MIN_HEIGHT = 20
-    COLOUR = [0, 255, 0]
+    COLOUR: ClassVar = [0, 255, 0]
     X_LIM: float
     Y_LIM: float
 
@@ -35,17 +35,17 @@ class Pipe:
         self._speed = speed
 
     @property
-    def rects(self) -> List[pygame.Rect]:
+    def rects(self) -> list[pygame.Rect]:
         _top_pipe = pygame.Rect(self.top_pos[0], self.top_pos[1], self.WIDTH, self._top_height)
         _bottom_pipe = pygame.Rect(self.bottom_pos[0], self.bottom_pos[1], self.WIDTH, self._bottom_height)
         return [_top_pipe, _bottom_pipe]
 
     @property
-    def top_pos(self):
+    def top_pos(self) -> list[float]:
         return [self._x, 0]
 
     @property
-    def bottom_pos(self):
+    def bottom_pos(self) -> list[float]:
         return [self._x, self._top_height + self.SPACING]
 
     @property
@@ -59,6 +59,8 @@ class Pipe:
         Parameters:
             screen (Surface): Screen to draw Pipe to
         """
+        if self.offscreen:
+            return
         pygame.draw.rect(screen, self.COLOUR, self.rects[0])
         pygame.draw.rect(screen, self.COLOUR, self.rects[1])
 
@@ -66,6 +68,8 @@ class Pipe:
         """
         Move Pipe.
         """
+        if self.offscreen:
+            return
         self._x -= self._speed
 
     @staticmethod
@@ -79,7 +83,7 @@ class Pipe:
         Returns:
             speed (float): Pipe speed
         """
-        speed = min(Pipe.START_SPEED + (pipes_spawned * Pipe.ACC_SPEED), {Pipe.MAX_SPEED})
+        speed = min(Pipe.START_SPEED + (pipes_spawned * Pipe.ACC_SPEED), Pipe.MAX_SPEED)
         return speed
 
     @staticmethod
@@ -93,5 +97,5 @@ class Pipe:
         Returns:
             spawn_time (float): Time until Pipe spawns
         """
-        spawn_time = max(Pipe.START_SPAWNTIME - (pipes_spawned * Pipe.ACC_SPAWNTIME), {Pipe.MIN_SPAWNTIME})
+        spawn_time = max(Pipe.START_SPAWNTIME - (pipes_spawned * Pipe.ACC_SPAWNTIME), Pipe.MIN_SPAWNTIME)
         return spawn_time
