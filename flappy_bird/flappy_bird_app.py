@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import List, cast
+from typing import cast
 
 from flappy_bird.flappy_bird_ga import FlappyBirdGA
 from flappy_bird.objects.bird import Bird
+from flappy_bird.objects.pipe import Pipe
 from flappy_bird.pg.app import App
 
 
@@ -26,7 +27,10 @@ class FlappyBirdApp(App):
         """
         super().__init__(name, width, height, fps, font, font_size)
         self._lifetime: int
-        self._count = 0
+        self._game_counter = 0
+        self._pipes: list[Pipe] = []
+        self._current_pipes = 0
+        self._pipe_counter = 0
 
     @property
     def max_count(self) -> int:
@@ -53,6 +57,8 @@ class FlappyBirdApp(App):
         """
         Bird.X_LIM = width
         Bird.Y_LIM = height
+        Pipe.X_LIM = width
+        Pipe.Y_LIM = height
         fba = cast(FlappyBirdApp, super().create_app(name, width, height, fps, font, font_size))
         fba._lifetime = lifetime
         return fba
@@ -65,7 +71,17 @@ class FlappyBirdApp(App):
         _start_y = 30
         self.write_text(f"Generation: {self._ga._generation}", _start_x, _start_y)
         self.write_text(f"Birds alive: {self._ga.num_alive}", _start_x, _start_y * 3)
-        self.write_text(f"Score: {int(self._count / self._fps)}", _start_x, _start_y * 4)
+        self.write_text(f"Score: {int(self._game_counter / self._fps)}", _start_x, _start_y * 4)
+
+    def _add_pipe(self, speed: float) -> None:
+        """
+        Spawn a new Pipe with a given speed.
+
+        Parameters:
+            speed (float): Pipe speed
+        """
+        self._pipes.append(Pipe(speed))
+        self._current_pipes += 1
 
     def add_ga(
         self,
@@ -74,9 +90,9 @@ class FlappyBirdApp(App):
         bird_x: int,
         bird_y: int,
         bird_size: int,
-        hidden_layer_sizes: List[int],
-        weights_range: List[float],
-        bias_range: List[float],
+        hidden_layer_sizes: list[int],
+        weights_range: list[float],
+        bias_range: list[float],
     ) -> None:
         """
         Add genetic algorithm to app.
@@ -87,9 +103,9 @@ class FlappyBirdApp(App):
             bird_x (int): x coordinate of bird's start position
             bird_y (int): y coordinate of bird's start position
             bird_size (int): Size of bird
-            hidden_layer_sizes (List[int]): Neural network hidden layer sizes
-            weights_range (List[float]): Range for random weights
-            bias_range (List[float]): Range for random bias
+            hidden_layer_sizes (list[int]): Neural network hidden layer sizes
+            weights_range (list[float]): Range for random weights
+            bias_range (list[float]): Range for random bias
         """
         self._ga = FlappyBirdGA.create(
             population_size, mutation_rate, bird_x, bird_y, bird_size, hidden_layer_sizes, weights_range, bias_range
@@ -99,16 +115,30 @@ class FlappyBirdApp(App):
         """
         Run genetic algorithm, update Birds and draw to screen.
         """
-        if self._count == self.max_count or self._ga.num_alive == 0:
+        if self._game_counter == self.max_count or self._ga.num_alive == 0:
             self._ga._analyse()
             self._ga._evolve()
             self._ga.reset()
-            self._count = 0
+            self._game_counter = 0
+            self._pipes = []
+            self._current_pipes = 0
+            self._pipe_counter = 0
+
+        _next_pipe_spawntime = Pipe.get_spawn_time(self._current_pipes)
+        _next_pipe_speed = Pipe.get_spawn_time(self._current_pipes) / self._fps
+        if int(self._pipe_counter) % _next_pipe_spawntime == 0:
+            self._add_pipe(_next_pipe_speed)
+            self._pipe_counter = 0
+
+        for _pipe in self._pipes:
+            _pipe.update()
+            _pipe.draw(self.screen)
 
         for _bird in self._ga._population._population:
             _bird.update()
             _bird.draw(self.screen)
 
         self._ga._evaluate()
-        self._count += 1
+        self._game_counter += 1
+        self._pipe_counter += 1
         self._write_stats()
