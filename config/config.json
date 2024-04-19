@@ -6,16 +6,16 @@
         "fps": 60,
         "font": "freesansbold.ttf",
         "font_size": 24,
-        "lifetime": 10
+        "lifetime": 100
     },
 
     "genetic_algorithm": {
-        "population_size": 200,
-        "mutation_rate": 0.02,
+        "population_size": 300,
+        "mutation_rate": 0.03,
         "bird_x": 40,
         "bird_y": 250,
         "bird_size": 40,
-        "hidden_layer_sizes": [1],
+        "hidden_layer_sizes": [3],
         "weights_range": [-1, 1],
         "bias_range": [-1, 1]
     }
