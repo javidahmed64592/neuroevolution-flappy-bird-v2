@@ -105,6 +105,10 @@ class FlappyBirdApp(App):
             self._ga.reset()
             self._count = 0
 
-        self._ga._evaluate(self.screen)
+        for _bird in self._ga._population._population:
+            _bird.update()
+            _bird.draw(self.screen)
+
+        self._ga._evaluate()
         self._count += 1
         self._write_stats()

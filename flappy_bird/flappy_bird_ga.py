@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import List
 
 import numpy as np
-import pygame
 from genetic_algorithm.ga import GeneticAlgorithm  # type: ignore
 from neural_network.neural_network import NeuralNetwork  # type: ignore
 
@@ -62,18 +61,6 @@ class FlappyBirdGA(GeneticAlgorithm):
         NeuralNetwork.BIAS_RANGE = bias_range
         flappy_bird._add_population([Bird(x, y, size, hidden_layer_sizes) for _ in range(population_size)])
         return flappy_bird
-
-    def _evaluate(self, screen: pygame.Surface) -> None:
-        """
-        Evaluate the population.
-
-        Parameters:
-            screen (Surface): Screen to draw Birds to
-        """
-        for _bird in self._population._population:
-            _bird.update()
-            _bird.draw(screen)
-        self._population.evaluate()
 
     def reset(self) -> None:
         """
