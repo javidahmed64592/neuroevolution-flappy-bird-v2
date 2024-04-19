@@ -7,6 +7,8 @@ from neural_network.math.matrix import Matrix  # type: ignore
 from neural_network.neural_network import NeuralNetwork  # type: ignore
 from numpy.typing import NDArray
 
+from flappy_bird.objects.pipe import Pipe
+
 
 class Bird(Member):
     """
@@ -39,6 +41,7 @@ class Bird(Member):
         self._score = 0
         self._alive = True
         self._colour = np.random.randint(low=0, high=256, size=3)
+        self._closest_pipe: Pipe
 
     @property
     def nn_input(self) -> NDArray:
@@ -72,6 +75,18 @@ class Bird(Member):
     @property
     def offscreen(self) -> bool:
         return (0 > self._y) or (self._y + self._size > self.Y_LIM)
+
+    @property
+    def collide_with_closest_pipe(self) -> bool:
+        """
+        Check if Bird is colliding with closest Pipe.
+
+        Returns:
+            (bool): Is bird colliding with pipe?
+        """
+        if not self._closest_pipe:
+            return False
+        return self.rect.colliderect(self._closest_pipe.rects[0]) or self.rect.colliderect(self._closest_pipe.rects[1])
 
     def crossover(self, parent_a: Bird, parent_b: Bird, mutation_rate: int) -> None:
         """
@@ -141,13 +156,17 @@ class Bird(Member):
             return
         pygame.draw.rect(screen, self._colour.tolist(), self.rect)
 
-    def update(self) -> None:
+    def update(self, closest_pipe: Pipe) -> None:
         """
         Use neural network to determine whether or not Bird should jump, and kill if it collides with a Pipe.
+
+        Parameters:
+            closest_pipe (Pipe): Pipe closest to Bird
         """
         if not self._alive:
             return
 
+        self._closest_pipe = closest_pipe
         output = self._nn.feedforward(self.nn_input)
 
         if output[0] < output[1]:
@@ -155,7 +174,7 @@ class Bird(Member):
 
         self.move()
 
-        if self.offscreen:
+        if self.offscreen or self.collide_with_closest_pipe:
             self._alive = False
             return
 

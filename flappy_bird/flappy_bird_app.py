@@ -36,6 +36,25 @@ class FlappyBirdApp(App):
     def max_count(self) -> int:
         return self._lifetime * self._fps
 
+    @property
+    def closest_pipe(self) -> Pipe:
+        """
+        Determine which Pipe is closest to and in front of the Birds.
+
+        Returns:
+            closest (Pipe): Pipe closest to the Birds
+        """
+        _dist = self._width
+        closest = None
+
+        for _pipe in self._pipes:
+            pipe_dist = _pipe._x + _pipe.WIDTH - Bird.X
+            if 0 < pipe_dist < _dist:
+                _dist = pipe_dist
+                closest = _pipe
+
+        return closest
+
     @classmethod
     def create_game(
         cls, name: str, width: int, height: int, fps: int, font: str, font_size: int, lifetime: int
@@ -135,7 +154,7 @@ class FlappyBirdApp(App):
             _pipe.draw(self.screen)
 
         for _bird in self._ga._population._population:
-            _bird.update()
+            _bird.update(self.closest_pipe)
             _bird.draw(self.screen)
 
         self._ga._evaluate()
