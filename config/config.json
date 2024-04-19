@@ -1,0 +1,22 @@
+{
+    "app": {
+        "name": "Flappy Bird",
+        "width": 500,
+        "height": 800,
+        "fps": 60,
+        "font": "freesansbold.ttf",
+        "font_size": 24,
+        "lifetime": 10
+    },
+
+    "genetic_algorithm": {
+        "population_size": 200,
+        "mutation_rate": 0.02,
+        "bird_x": 40,
+        "bird_y": 250,
+        "bird_size": 40,
+        "hidden_layer_sizes": [1],
+        "weights_range": [-1, 1],
+        "bias_range": [-1, 1]
+    }
+}

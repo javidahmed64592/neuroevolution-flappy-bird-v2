@@ -84,15 +84,15 @@ class FlappyBirdApp(App):
         Parameters:
             population_size (int): Number of members in population
             mutation_rate (float): Mutation rate for members
-            x (int): x coordinate of bird's start position
-            y (int): y coordinate of bird's start position
-            size (int): Size of bird
+            bird_x (int): x coordinate of bird's start position
+            bird_y (int): y coordinate of bird's start position
+            bird_size (int): Size of bird
             hidden_layer_sizes (List[int]): Neural network hidden layer sizes
             weights_range (List[float]): Range for random weights
             bias_range (List[float]): Range for random bias
         """
         self._ga = FlappyBirdGA.create(
-            population_size, mutation_rate, x, y, size, hidden_layer_sizes, weights_range, bias_range
+            population_size, mutation_rate, bird_x, bird_y, bird_size, hidden_layer_sizes, weights_range, bias_range
         )
 
     def update(self) -> None:
