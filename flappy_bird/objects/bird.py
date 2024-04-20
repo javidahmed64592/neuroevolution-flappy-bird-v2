@@ -16,9 +16,9 @@ class Bird(Member):
     """
 
     GRAV = 1
-    LIFT = -20
+    LIFT = -25
     X = 50
-    MIN_VELOCITY = -10
+    MIN_VELOCITY = -15
     X_LIM = 1000
     Y_LIM = 1000
 
@@ -125,7 +125,7 @@ class Bird(Member):
         self._colour = np.average(
             [self._colour, parent_a._colour, parent_b._colour],
             axis=0,
-            weights=[0.98, 0.01, 0.01],
+            weights=[0.998, 0.001, 0.001],
         )
 
     def reset(self) -> None:
