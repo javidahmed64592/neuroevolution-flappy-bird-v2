@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import json
 
 from flappy_bird.flappy_bird_app import FlappyBirdApp
@@ -7,23 +5,9 @@ from flappy_bird.flappy_bird_app import FlappyBirdApp
 CONFIG_FILEPATH = "./config/config.json"
 
 
-def load_config(filepath: str) -> dict:
-    """
-    Load config from `json` file.
-
-    Parameters:
-        filepath (str): Path to config file
-
-    Returns:
-        data (dict): Application config
-    """
-    with open(filepath) as file:
-        data = json.load(file)
-    return data
-
-
 if __name__ == "__main__":
-    config = load_config(CONFIG_FILEPATH)
+    with open(CONFIG_FILEPATH) as config_file:
+        config = json.load(config_file)
     app_config = config["app"]
     ga_config = config["genetic_algorithm"]
 
