@@ -144,7 +144,7 @@ class FlappyBirdApp(App):
             self._pipe_counter = 0
 
         _next_pipe_spawntime = Pipe.get_spawn_time(self._current_pipes)
-        _next_pipe_speed = Pipe.get_spawn_time(self._current_pipes) / self._fps
+        _next_pipe_speed = Pipe.get_speed(self._current_pipes) / self._fps
         if int(self._pipe_counter) % _next_pipe_spawntime == 0:
             self._add_pipe(_next_pipe_speed)
             self._pipe_counter = 0
