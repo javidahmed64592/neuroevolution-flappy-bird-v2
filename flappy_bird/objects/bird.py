@@ -93,6 +93,19 @@ class Bird(Member):
             return False
         return self.rect.colliderect(self._closest_pipe.rects[0]) or self.rect.colliderect(self._closest_pipe.rects[1])
 
+    def _jump(self) -> None:
+        """
+        Make Bird 'jump' by accelerating upwards.
+        """
+        self.velocity += self.LIFT
+
+    def _move(self) -> None:
+        """
+        Update Bird's position and velocity.
+        """
+        self.velocity += self.GRAV
+        self._y += self.velocity
+
     def crossover(self, parent_a: Bird, parent_b: Bird, mutation_rate: int) -> None:
         """
         Crossover the chromosomes of two Birds to create a new chromosome.
@@ -137,19 +150,6 @@ class Bird(Member):
         self._score = 0
         self._alive = True
 
-    def jump(self) -> None:
-        """
-        Make Bird 'jump' by accelerating upwards.
-        """
-        self.velocity += self.LIFT
-
-    def move(self) -> None:
-        """
-        Update Bird's position and velocity.
-        """
-        self.velocity += self.GRAV
-        self._y += self.velocity
-
     def draw(self, screen: pygame.Surface) -> None:
         """
         Draw Bird on the display.
@@ -175,9 +175,9 @@ class Bird(Member):
         output = self._nn.feedforward(self.nn_input)
 
         if output[0] < output[1]:
-            self.jump()
+            self._jump()
 
-        self.move()
+        self._move()
 
         if self.offscreen or self.collide_with_closest_pipe:
             self._alive = False
