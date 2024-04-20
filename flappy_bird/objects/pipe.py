@@ -14,9 +14,9 @@ class Pipe:
     START_SPEED = 200
     MAX_SPEED = 2000
     ACC_SPEED = 10
-    START_SPAWNTIME = 120
-    MIN_SPAWNTIME = 80
-    ACC_SPAWNTIME = 1
+    START_SPAWNTIME = 100
+    MIN_SPAWNTIME = 50
+    ACC_SPAWNTIME = 2
     COLOUR: ClassVar = [0, 200, 0]
     X_LIM: float
     Y_LIM: float
