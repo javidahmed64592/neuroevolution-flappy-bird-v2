@@ -5,13 +5,13 @@
         "height": 800,
         "fps": 60,
         "font": "freesansbold.ttf",
-        "font_size": 24,
-        "lifetime": 100
+        "font_size": 24
     },
 
     "genetic_algorithm": {
         "population_size": 300,
         "mutation_rate": 0.03,
+        "lifetime": 100,
         "bird_x": 40,
         "bird_y": 250,
         "bird_size": 40,
