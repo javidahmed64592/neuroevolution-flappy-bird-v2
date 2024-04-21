@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import numpy as np
 import pygame
-from genetic_algorithm.ga import Member  # type: ignore
-from neural_network.math.matrix import Matrix  # type: ignore
-from neural_network.neural_network import NeuralNetwork  # type: ignore
+from genetic_algorithm.ga import Member
+from neural_network.math.matrix import Matrix
+from neural_network.neural_network import NeuralNetwork
 from numpy.typing import NDArray
 
 from flappy_bird.objects.pipe import Pipe
@@ -12,7 +12,14 @@ from flappy_bird.objects.pipe import Pipe
 
 class Bird(Member):
     """
-    Bird to use in Flappy Bird app.
+    This class creates a Bird object which has a starting x and y position and a size.
+
+    The Bird is drawn to the display in the draw() method. The update() method performs physics calculations and updates
+    the Bird's position, velocity, and alive state accordingly. The Bird dies if it collides with a pipe.
+
+    The Bird is assigned a neural network which acts as its brain and determines when the Bird should 'jump' based on
+    its current position and the position of the nearest pipe. This brain evolves via crossover and mutations. Its
+    fitness value is the square of its score which is incremented by 1 each time the update() method is called.
     """
 
     GRAV = 1
@@ -87,7 +94,7 @@ class Bird(Member):
         Check if Bird is colliding with closest Pipe.
 
         Returns:
-            (bool): Is bird colliding with pipe?
+            (bool): Is Bird colliding with Pipe?
         """
         if not self._closest_pipe:
             return False

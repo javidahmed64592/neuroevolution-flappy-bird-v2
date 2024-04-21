@@ -6,7 +6,12 @@ import pygame
 
 class Pipe:
     """
-    Pipe to use in Flappy Bird app.
+    This class creates a Pipe which has a width, a spacing and a speed at which to travel across the screen.
+
+    The Pipe is drawn to the display in the draw() method. The update() method moves the Pipe along the screen.
+
+    The Pipes have an offscreen property which indicates whether or not the Pipes have moved off the screen and need to
+     be updated.
     """
 
     WIDTH = 50

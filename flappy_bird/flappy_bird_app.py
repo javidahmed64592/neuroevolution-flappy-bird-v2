@@ -117,9 +117,9 @@ class FlappyBirdApp(App):
             population_size (int): Number of members in population
             mutation_rate (float): Mutation rate for members
             lifetime (int): Time of each generation in seconds
-            bird_x (int): x coordinate of bird's start position
-            bird_y (int): y coordinate of bird's start position
-            bird_size (int): Size of bird
+            bird_x (int): x coordinate of Bird's start position
+            bird_y (int): y coordinate of Bird's start position
+            bird_size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
             weights_range (list[float]): Range for random weights
             bias_range (list[float]): Range for random bias

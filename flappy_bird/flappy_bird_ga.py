@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import numpy as np
-from genetic_algorithm.ga import GeneticAlgorithm  # type: ignore
-from neural_network.neural_network import NeuralNetwork  # type: ignore
+from genetic_algorithm.ga import GeneticAlgorithm
+from neural_network.neural_network import NeuralNetwork
 
 from flappy_bird.objects.bird import Bird
 
@@ -45,12 +45,12 @@ class FlappyBirdGA(GeneticAlgorithm):
         Create genetic algorithm and configure neural network.
 
         Parameters:
-            population_size (int): Number of members in population
-            mutation_rate (float): Mutation rate for members
+            population_size (int): Number of Birds in population
+            mutation_rate (float): Mutation rate for Birds
             lifetime (int): Time of each generation in seconds
-            x (int): x coordinate of bird's start position
-            y (int): y coordinate of bird's start position
-            size (int): Size of bird
+            x (int): x coordinate of Bird's start position
+            y (int): y coordinate of Bird's start position
+            size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
             weights_range (list[float]): Range for random weights
             bias_range (list[float]): Range for random bias
