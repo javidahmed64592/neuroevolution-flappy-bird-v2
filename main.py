@@ -18,11 +18,11 @@ if __name__ == "__main__":
         fps=app_config["fps"],
         font=app_config["font"],
         font_size=app_config["font_size"],
-        lifetime=app_config["lifetime"],
     )
     fba.add_ga(
         population_size=ga_config["population_size"],
         mutation_rate=ga_config["mutation_rate"],
+        lifetime=ga_config["lifetime"],
         bird_x=ga_config["bird_x"],
         bird_y=ga_config["bird_y"],
         bird_size=ga_config["bird_size"],

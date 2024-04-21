@@ -26,7 +26,7 @@ class FlappyBirdApp(App):
             font_size (int): Font size
         """
         super().__init__(name, width, height, fps, font, font_size)
-        self._lifetime: int
+        self._ga: FlappyBirdGA
         self._game_counter = 0
         self._pipes: list[Pipe] = []
         self._current_pipes = 0
@@ -34,7 +34,7 @@ class FlappyBirdApp(App):
 
     @property
     def max_count(self) -> int:
-        return self._lifetime * self._fps
+        return self._ga._lifetime * self._fps
 
     @property
     def closest_pipe(self) -> Pipe:
@@ -56,9 +56,7 @@ class FlappyBirdApp(App):
         return closest
 
     @classmethod
-    def create_game(
-        cls, name: str, width: int, height: int, fps: int, font: str, font_size: int, lifetime: int
-    ) -> FlappyBirdApp:
+    def create_game(cls, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> FlappyBirdApp:
         """
         Create App and configure limits for Bird and genetic algorithm.
 
@@ -69,7 +67,6 @@ class FlappyBirdApp(App):
             fps (int): Application FPS
             font (str): Font style
             font_size (int): Font size
-            lifetime (int): Length of each generation
 
         Returns:
             fba (FlappyBirdApp): Flappy Bird application
@@ -79,7 +76,6 @@ class FlappyBirdApp(App):
         Pipe.X_LIM = width
         Pipe.Y_LIM = height
         fba = cast(FlappyBirdApp, super().create_app(name, width, height, fps, font, font_size))
-        fba._lifetime = lifetime
         return fba
 
     def _write_stats(self) -> None:
@@ -106,6 +102,7 @@ class FlappyBirdApp(App):
         self,
         population_size: int,
         mutation_rate: float,
+        lifetime: int,
         bird_x: int,
         bird_y: int,
         bird_size: int,
@@ -119,6 +116,7 @@ class FlappyBirdApp(App):
         Parameters:
             population_size (int): Number of members in population
             mutation_rate (float): Mutation rate for members
+            lifetime (int): Time of each generation in seconds
             bird_x (int): x coordinate of bird's start position
             bird_y (int): y coordinate of bird's start position
             bird_size (int): Size of bird
@@ -127,7 +125,15 @@ class FlappyBirdApp(App):
             bias_range (list[float]): Range for random bias
         """
         self._ga = FlappyBirdGA.create(
-            population_size, mutation_rate, bird_x, bird_y, bird_size, hidden_layer_sizes, weights_range, bias_range
+            population_size,
+            mutation_rate,
+            lifetime,
+            bird_x,
+            bird_y,
+            bird_size,
+            hidden_layer_sizes,
+            weights_range,
+            bias_range,
         )
 
     def update(self) -> None:

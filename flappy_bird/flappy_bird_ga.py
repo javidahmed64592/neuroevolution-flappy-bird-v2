@@ -21,6 +21,7 @@ class FlappyBirdGA(GeneticAlgorithm):
             mutation_rate (float): Population mutation rate
         """
         super().__init__(birds, mutation_rate)
+        self._lifetime: int
 
     @property
     def num_alive(self) -> int:
@@ -32,6 +33,7 @@ class FlappyBirdGA(GeneticAlgorithm):
         cls,
         population_size: int,
         mutation_rate: float,
+        lifetime: int,
         x: int,
         y: int,
         size: int,
@@ -45,6 +47,7 @@ class FlappyBirdGA(GeneticAlgorithm):
         Parameters:
             population_size (int): Number of members in population
             mutation_rate (float): Mutation rate for members
+            lifetime (int): Time of each generation in seconds
             x (int): x coordinate of bird's start position
             y (int): y coordinate of bird's start position
             size (int): Size of bird
@@ -59,6 +62,7 @@ class FlappyBirdGA(GeneticAlgorithm):
         NeuralNetwork.BIAS_RANGE = bias_range
         Bird.X = x
         flappy_bird = cls([Bird(y, size, hidden_layer_sizes) for _ in range(population_size)], mutation_rate)
+        flappy_bird._lifetime = lifetime
         return flappy_bird
 
     def reset(self) -> None:
