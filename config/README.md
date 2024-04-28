@@ -17,3 +17,6 @@
   - `hidden_layer_sizes` (list[int]): Neural network hidden layer sizes
   - `weights_range` (list[float]): Range for random weights
   - `bias_range` (list[float]): Range for random bias
+  - `shift_vals` (float): Factor to adjust Layer weights and biases by (multiplied by random number between `[(1-shift_vals), (1+shift_vals)]`)
+  - `prob_new_node`: Probability to add a new random Node to a given Layer
+  - `prob_remove_node`: Probability to remove a random Node from a given Layer

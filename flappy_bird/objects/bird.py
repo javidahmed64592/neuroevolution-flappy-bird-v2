@@ -29,7 +29,14 @@ class Bird(Member):
     X_LIM = 1000
     Y_LIM = 1000
 
-    def __init__(self, y: int, size: int, hidden_layer_sizes: list[int]) -> None:
+    def __init__(
+        self,
+        y: int,
+        size: int,
+        hidden_layer_sizes: list[int],
+        weights_range: tuple[float, float],
+        bias_range: tuple[float, float],
+    ) -> None:
         """
         Initialise Bird with a starting position, a width and a height.
 
@@ -37,6 +44,8 @@ class Bird(Member):
             y (int): y coordinate of Bird's start position
             size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
+            weights_range (tuple[float, float]): Range for random weights
+            bias_range (tuple[float, float]): Range for random biases
         """
         super().__init__()
         self._y = y
@@ -44,7 +53,7 @@ class Bird(Member):
         self._velocity = 0
         self._size = size
         self._closest_pipe: Pipe = None
-        self._nn = NeuralNetwork(len(self.nn_input), 2, hidden_layer_sizes)
+        self._nn = NeuralNetwork(len(self.nn_input), 2, hidden_layer_sizes, weights_range, bias_range)
 
         self._score = 0
         self._alive = True
@@ -122,26 +131,7 @@ class Bird(Member):
             parent_b (Member): Used to construct new chromosome
             mutation_rate (int): Probability for mutations to occur
         """
-        _new_weights = []
-        _new_biases = []
-
-        _zipped_chromosomes = zip(
-            parent_a.chromosome[0],
-            parent_b.chromosome[0],
-            parent_a.chromosome[1],
-            parent_b.chromosome[1],
-            strict=False,
-        )
-        for pa_weights, pb_weights, pa_bias, pb_bias in _zipped_chromosomes:
-            _new_weight = Matrix.average_matrix(pa_weights, pb_weights)
-            _new_weight = Matrix.mutated_matrix(_new_weight, mutation_rate, self._nn.WEIGHTS_RANGE)
-            _new_bias = Matrix.average_matrix(pa_bias, pb_bias)
-            _new_bias = Matrix.mutated_matrix(_new_bias, mutation_rate, self._nn.BIAS_RANGE)
-
-            _new_weights.append(_new_weight)
-            _new_biases.append(_new_bias)
-
-        self._new_chromosome = [_new_weights, _new_biases]
+        self._new_chromosome = self._nn.crossover(parent_a._nn, parent_b._nn, mutation_rate)
         self._colour = np.average(
             [self._colour, parent_a._colour, parent_b._colour],
             axis=0,

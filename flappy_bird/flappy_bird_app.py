@@ -109,6 +109,9 @@ class FlappyBirdApp(App):
         hidden_layer_sizes: list[int],
         weights_range: list[float],
         bias_range: list[float],
+        shift_vals: float,
+        prob_new_node: float,
+        prob_remove_node: float,
     ) -> None:
         """
         Add genetic algorithm to app.
@@ -123,6 +126,9 @@ class FlappyBirdApp(App):
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
             weights_range (list[float]): Range for random weights
             bias_range (list[float]): Range for random bias
+            shift_vals (float): Values to shift weights and biases by
+            prob_new_node (float): Probability to add new random Node to a given Layer
+            prob_remove_node (float): Probability to remove a random Node from a given Layer
         """
         self._ga = FlappyBirdGA.create(
             population_size,
@@ -134,6 +140,9 @@ class FlappyBirdApp(App):
             hidden_layer_sizes,
             weights_range,
             bias_range,
+            shift_vals,
+            prob_new_node,
+            prob_remove_node,
         )
 
     def update(self) -> None:
@@ -143,6 +152,7 @@ class FlappyBirdApp(App):
         if self._game_counter == self.max_count or self._ga.num_alive == 0:
             self._ga._analyse()
             self._ga._evolve()
+            self._ga.mutate_birds()
             self._ga.reset()
             self._game_counter = 0
             self._pipes = []
