@@ -9,8 +9,8 @@
     },
 
     "genetic_algorithm": {
-        "population_size": 300,
-        "mutation_rate": 0.03,
+        "population_size": 200,
+        "mutation_rate": 0.02,
         "lifetime": 100,
         "bird_x": 40,
         "bird_y": 250,
