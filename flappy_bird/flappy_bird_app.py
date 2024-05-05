@@ -31,6 +31,7 @@ class FlappyBirdApp(App):
         self._pipes: list[Pipe] = []
         self._current_pipes = 0
         self._pipe_counter = 0
+        self._bird_x: int
 
     @property
     def max_count(self) -> int:
@@ -48,7 +49,7 @@ class FlappyBirdApp(App):
         closest = None
 
         for _pipe in self._pipes:
-            pipe_dist = _pipe._x + _pipe.WIDTH - Bird.X
+            pipe_dist = _pipe._x + _pipe.WIDTH - self._bird_x
             if 0 < pipe_dist < _dist:
                 _dist = pipe_dist
                 closest = _pipe
@@ -130,6 +131,7 @@ class FlappyBirdApp(App):
             prob_new_node (float): Probability to add new random Node to a given Layer
             prob_remove_node (float): Probability to remove a random Node from a given Layer
         """
+        self._bird_x = bird_x
         self._ga = FlappyBirdGA.create(
             population_size,
             mutation_rate,

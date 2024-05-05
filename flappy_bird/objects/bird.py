@@ -24,13 +24,13 @@ class Bird(Member):
 
     GRAV = 1
     LIFT = -25
-    X = 50
     MIN_VELOCITY = -15
     X_LIM = 1000
     Y_LIM = 1000
 
     def __init__(
         self,
+        x: int,
         y: int,
         size: int,
         hidden_layer_sizes: list[int],
@@ -41,6 +41,7 @@ class Bird(Member):
         Initialise Bird with a starting position, a width and a height.
 
         Parameters:
+            x (int): x coordinate of Bird's start position
             y (int): y coordinate of Bird's start position
             size (int): Size of Bird
             hidden_layer_sizes (list[int]): Neural network hidden layer sizes
@@ -48,6 +49,7 @@ class Bird(Member):
             bias_range (tuple[float, float]): Range for random biases
         """
         super().__init__()
+        self._x = x
         self._y = y
         self._start_y = y
         self._velocity = 0
@@ -63,7 +65,7 @@ class Bird(Member):
     def nn_input(self) -> NDArray:
         _nn_input = np.array([self.velocity / self.MIN_VELOCITY, 0, 0, 0])
         if self._closest_pipe:
-            _nn_input[1] = (self._closest_pipe._x - self.X) / self.X_LIM
+            _nn_input[1] = (self._closest_pipe._x - self._x) / self.X_LIM
             _nn_input[2] = (self._closest_pipe._top_height - self._y) / self.Y_LIM
             _nn_input[3] = (self._closest_pipe._bottom_height - self._y) / self.Y_LIM
         return _nn_input
@@ -83,7 +85,7 @@ class Bird(Member):
 
     @property
     def rect(self) -> pygame.Rect:
-        return pygame.Rect(self.X, self._y, self._size, self._size)
+        return pygame.Rect(self._x, self._y, self._size, self._size)
 
     @property
     def velocity(self) -> int:

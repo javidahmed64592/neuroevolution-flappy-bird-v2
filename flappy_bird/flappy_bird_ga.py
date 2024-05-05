@@ -68,9 +68,8 @@ class FlappyBirdGA(GeneticAlgorithm):
         Returns:
             flappy_bird (FlappyBirdGA): Flappy Bird app
         """
-        Bird.X = x
         flappy_bird = cls(
-            [Bird(y, size, hidden_layer_sizes, weights_range, bias_range) for _ in range(population_size)],
+            [Bird(x, y, size, hidden_layer_sizes, weights_range, bias_range) for _ in range(population_size)],
             mutation_rate,
             shift_vals,
             prob_new_node,
