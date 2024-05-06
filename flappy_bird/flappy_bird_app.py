@@ -112,7 +112,7 @@ class FlappyBirdApp(App):
         bias_range: list[float],
         shift_vals: float,
         prob_new_node: float,
-        prob_remove_node: float,
+        prob_toggle_connection: float,
     ) -> None:
         """
         Add genetic algorithm to app.
@@ -128,8 +128,8 @@ class FlappyBirdApp(App):
             weights_range (list[float]): Range for random weights
             bias_range (list[float]): Range for random bias
             shift_vals (float): Values to shift weights and biases by
-            prob_new_node (float): Probability to add new random Node to a given Layer
-            prob_remove_node (float): Probability to remove a random Node from a given Layer
+            prob_new_node (float): Probability per Layer for a new Node
+            prob_toggle_connection (float): Probability per Layer to toggle a random Node
         """
         self._bird_x = bird_x
         self._ga = FlappyBirdGA.create(
@@ -144,7 +144,7 @@ class FlappyBirdApp(App):
             bias_range,
             shift_vals,
             prob_new_node,
-            prob_remove_node,
+            prob_toggle_connection,
         )
 
     def update(self) -> None:

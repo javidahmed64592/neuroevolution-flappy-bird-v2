@@ -31,6 +31,6 @@ if __name__ == "__main__":
         bias_range=ga_config["bias_range"],
         shift_vals=ga_config["shift_vals"],
         prob_new_node=ga_config["prob_new_node"],
-        prob_remove_node=ga_config["prob_remove_node"],
+        prob_toggle_connection=ga_config["prob_toggle_connection"],
     )
     fba.run()
