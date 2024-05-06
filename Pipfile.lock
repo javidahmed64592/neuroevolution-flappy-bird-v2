@@ -24,7 +24,7 @@
         "neural-network": {
             "editable": true,
             "git": "https://github.com/javidahmed64592/neural-network",
-            "ref": "3dc79b475e3c91363742cd55e21925be592330a0"
+            "ref": "5483e4bd9178177ce40643606734c8e33981f000"
         },
         "numpy": {
             "hashes": [
