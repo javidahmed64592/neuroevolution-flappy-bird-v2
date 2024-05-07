@@ -56,6 +56,10 @@ class Pipe:
     def offscreen(self) -> bool:
         return self._x < -self.WIDTH
 
+    @property
+    def normalised_speed(self) -> float:
+        return self._speed / self.MAX_SPEED
+
     def draw(self, screen: pygame.Surface) -> None:
         """
         Draw Pipe on the display.
