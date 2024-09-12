@@ -3,6 +3,8 @@ from __future__ import annotations
 import numpy as np
 import pygame
 from genetic_algorithm.ga import Member
+from neural_network.layer import HiddenLayer, InputLayer, OutputLayer
+from neural_network.math.activation_functions import LinearActivation, SigmoidActivation
 from neural_network.math.matrix import Matrix
 from neural_network.neural_network import NeuralNetwork
 from numpy.typing import NDArray
@@ -55,11 +57,29 @@ class Bird(Member):
         self._velocity = 0
         self._size = size
         self._closest_pipe: Pipe = None
-        self._nn = NeuralNetwork(len(self.nn_input), 2, hidden_layer_sizes, weights_range, bias_range)
+
+        self._hidden_layer_sizes = hidden_layer_sizes
+        self._weights_range = weights_range
+        self._bias_range = bias_range
+        self._nn: NeuralNetwork = None
 
         self._score = 0
         self._alive = True
         self._colour = np.random.randint(low=0, high=256, size=3)
+
+    @property
+    def neural_network(self) -> NeuralNetwork:
+        if not self._nn:
+            input_layer = InputLayer(size=len(self.nn_input), activation=LinearActivation)
+            hidden_layers = [
+                HiddenLayer(size=size, activation=SigmoidActivation, weights_range=[-1, 1], bias_range=[-1, 1])
+                for size in self._hidden_layer_sizes
+            ]
+            output_layer = OutputLayer(size=2, activation=LinearActivation, weights_range=[-1, 1], bias_range=[-1, 1])
+
+            self._nn = NeuralNetwork(layers=[input_layer, *hidden_layers, output_layer])
+
+        return self._nn
 
     @property
     def nn_input(self) -> NDArray:
@@ -69,16 +89,16 @@ class Bird(Member):
             _nn_input[2] = (self._closest_pipe._x - self._x) / self.X_LIM
             _nn_input[3] = (self._closest_pipe._top_height - self._y) / self.Y_LIM
             _nn_input[4] = (self._closest_pipe._bottom_height - self._y) / self.Y_LIM
-        return _nn_input
+        return np.expand_dims(_nn_input, axis=1)
 
     @property
     def chromosome(self) -> list[list[Matrix]]:
-        return [self._nn.weights, self._nn.bias]
+        return [self.neural_network.weights, self.neural_network.bias]
 
     @chromosome.setter
     def chromosome(self, new_chromosome: list[list[Matrix]]) -> None:
-        self._nn.weights = new_chromosome[0]
-        self._nn.bias = new_chromosome[1]
+        self.neural_network.weights = new_chromosome[0]
+        self.neural_network.bias = new_chromosome[1]
 
     @property
     def fitness(self) -> int:
@@ -134,7 +154,9 @@ class Bird(Member):
             parent_b (Member): Used to construct new chromosome
             mutation_rate (int): Probability for mutations to occur
         """
-        self._new_chromosome = self._nn.crossover(parent_a._nn, parent_b._nn, mutation_rate)
+        self._new_chromosome = self.neural_network.crossover(
+            parent_a.neural_network, parent_b.neural_network, mutation_rate
+        )
         self._colour = np.average(
             [self._colour, parent_a._colour, parent_b._colour],
             axis=0,
@@ -172,7 +194,7 @@ class Bird(Member):
             return
 
         self._closest_pipe = closest_pipe
-        output = self._nn.feedforward(self.nn_input)
+        output = self.neural_network.feedforward(self.nn_input)
 
         if output[0] < output[1]:
             self._jump()
