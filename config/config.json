@@ -9,17 +9,15 @@
     },
 
     "genetic_algorithm": {
-        "population_size": 50,
+        "population_size": 200,
         "mutation_rate": 0.03,
         "lifetime": 100,
         "bird_x": 40,
         "bird_y": 250,
         "bird_size": 40,
-        "hidden_layer_sizes": [4],
-        "weights_range": [-0.3, 0.3],
-        "bias_range": [-0.05, 0.05],
-        "shift_vals": 0.01,
-        "prob_new_node": 0.01,
-        "prob_toggle_connection": 0.001
+        "hidden_layer_sizes": [],
+        "weights_range": [-1, 1],
+        "bias_range": [-0.1, 0.1],
+        "shift_vals": 0.01
     }
 }

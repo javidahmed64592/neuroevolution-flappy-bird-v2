@@ -16,8 +16,6 @@ class FlappyBirdGA(GeneticAlgorithm):
         birds: list[Bird],
         mutation_rate: float,
         shift_vals: float,
-        prob_new_node: float,
-        prob_toggle_connection: float,
     ) -> None:
         """
         Initialise FlappyBirdGA with a mutation rate.
@@ -26,14 +24,10 @@ class FlappyBirdGA(GeneticAlgorithm):
             birds (list[Bird]): Population of Birds
             mutation_rate (float): Population mutation rate
             shift_vals (float): Values to shift weights and biases by
-            prob_new_node (float): Probability per Layer for a new Node
-            prob_toggle_connection (float): Probability per Layer to toggle a random Node
         """
         super().__init__(birds, mutation_rate)
         self._lifetime: int
         self._shift_vals = shift_vals
-        self._prob_new_node = prob_new_node
-        self._prob_toggle_connection = prob_toggle_connection
 
     @property
     def num_alive(self) -> int:
@@ -53,8 +47,6 @@ class FlappyBirdGA(GeneticAlgorithm):
         weights_range: list[float],
         bias_range: list[float],
         shift_vals: float,
-        prob_new_node: float,
-        prob_toggle_connection: float,
     ) -> FlappyBirdGA:
         """
         Create genetic algorithm and configure neural network.
@@ -70,8 +62,6 @@ class FlappyBirdGA(GeneticAlgorithm):
             weights_range (list[float]): Range for random weights
             bias_range (list[float]): Range for random bias
             shift_vals (float): Values to shift weights and biases by
-            prob_new_node (float): Probability per Layer for a new Node
-            prob_toggle_connection (float): Probability per Layer to toggle a random Node
 
         Returns:
             flappy_bird (FlappyBirdGA): Flappy Bird app
@@ -80,8 +70,6 @@ class FlappyBirdGA(GeneticAlgorithm):
             [Bird(x, y, size, hidden_layer_sizes, weights_range, bias_range) for _ in range(population_size)],
             mutation_rate,
             shift_vals,
-            prob_new_node,
-            prob_toggle_connection,
         )
         flappy_bird._lifetime = lifetime
         return flappy_bird
@@ -98,4 +86,4 @@ class FlappyBirdGA(GeneticAlgorithm):
         Mutate all Birds.
         """
         for _bird in self._population._population:
-            _bird._nn.mutate(self._shift_vals, self._prob_new_node, self._prob_toggle_connection)
+            _bird._nn.mutate(self._shift_vals)
