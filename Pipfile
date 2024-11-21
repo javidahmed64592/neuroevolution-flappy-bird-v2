@@ -6,12 +6,13 @@ name = "pypi"
 [packages]
 genetic-algorithm = {editable = true, git = "https://github.com/javidahmed64592/genetic-algorithm"}
 neural-network = {editable = true, git = "https://github.com/javidahmed64592/neural-network"}
+pygame = "*"
 
 [dev-packages]
 ruff = "*"
 
 [requires]
-python_version = "3.11"
+python_version = "3.12"
 
 [scripts]
 main = "python main.py"
