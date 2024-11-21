@@ -4,7 +4,7 @@ import numpy as np
 import pygame
 from genetic_algorithm.ga import Member
 from neural_network.layer import HiddenLayer, InputLayer, OutputLayer
-from neural_network.math.activation_functions import LinearActivation, SigmoidActivation
+from neural_network.math.activation_functions import LinearActivation, ReluActivation
 from neural_network.math.matrix import Matrix
 from neural_network.neural_network import NeuralNetwork
 from numpy.typing import NDArray
@@ -72,10 +72,14 @@ class Bird(Member):
         if not self._nn:
             input_layer = InputLayer(size=len(self.nn_input), activation=LinearActivation)
             hidden_layers = [
-                HiddenLayer(size=size, activation=SigmoidActivation, weights_range=[-1, 1], bias_range=[-1, 1])
+                HiddenLayer(
+                    size=size, activation=ReluActivation, weights_range=self._weights_range, bias_range=self._bias_range
+                )
                 for size in self._hidden_layer_sizes
             ]
-            output_layer = OutputLayer(size=2, activation=LinearActivation, weights_range=[-1, 1], bias_range=[-1, 1])
+            output_layer = OutputLayer(
+                size=2, activation=LinearActivation, weights_range=self._weights_range, bias_range=self._bias_range
+            )
 
             self._nn = NeuralNetwork(layers=[input_layer, *hidden_layers, output_layer])
 
@@ -83,12 +87,11 @@ class Bird(Member):
 
     @property
     def nn_input(self) -> NDArray:
-        _nn_input = np.array([self.velocity / self.MIN_VELOCITY, 0, 0, 0, 0])
+        _nn_input = np.array([self.velocity / self.MIN_VELOCITY, 0, 0, 0])
         if self._closest_pipe:
-            _nn_input[1] = self._closest_pipe.normalised_speed
-            _nn_input[2] = (self._closest_pipe._x - self._x) / self.X_LIM
-            _nn_input[3] = (self._closest_pipe._top_height - self._y) / self.Y_LIM
-            _nn_input[4] = (self._closest_pipe._bottom_height - self._y) / self.Y_LIM
+            _nn_input[1] = (self._y - self._closest_pipe._top_height) / self.Y_LIM
+            _nn_input[2] = (self._y - self._closest_pipe._bottom_height) / self.Y_LIM
+            _nn_input[3] = (self._x - self._closest_pipe._x) / self.X_LIM
         return np.expand_dims(_nn_input, axis=1)
 
     @property
