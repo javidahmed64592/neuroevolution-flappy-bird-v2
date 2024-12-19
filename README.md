@@ -32,7 +32,7 @@ This will open a Pygame window and begin the training. The application can be ex
 
 ## Linting and Formatting
 This library uses `ruff` for linting and formatting.
-This is configured in `ruff.toml`.
+This is configured in `pyproject.toml`.
 
 To check the code for linting errors:
 
