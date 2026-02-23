@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
+
 import pygame
 from pygame.locals import QUIT
 
 
-class App:
+class App(ABC):
     """This class can be used to create a Pygame application.
 
-    Override the `update()` method and optionally the `run()` method to create a specific app.
+    Override the `update()` method for your application.
     """
 
     def __init__(self, name: str, width: int, height: int, fps: int, font: str, font_size: int) -> None:
@@ -69,17 +71,10 @@ class App:
         _text = self._pg_font.render(text, 1, (255, 255, 255))
         self._display_surf.blit(_text, (x, y))
 
+    @abstractmethod
     def update(self) -> None:
-        """Display application information to screen."""
-        _start_x = 50
-        _start_y = 50
-        self.write_text("App info:", _start_x, _start_y)
-        self.write_text(f"Name: {self._name}", _start_x, _start_y * 3)
-        self.write_text(f"Width: {self._width}", _start_x, _start_y * 4)
-        self.write_text(f"Height: {self._height}", _start_x, _start_y * 5)
-        self.write_text(f"Font: {self._font}", _start_x, _start_y * 6)
-        self.write_text(f"Font size: {self._font_size}", _start_x, _start_y * 7)
-        self.write_text(f"FPS: {self._clock.get_fps()}", _start_x, _start_y * 9)
+        """Update the game state."""
+        pass
 
     def run(self) -> None:
         """Run the application and handle events."""
