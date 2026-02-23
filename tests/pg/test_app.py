@@ -15,10 +15,26 @@ MOCK_FONT = "Arial"
 MOCK_FONT_SIZE = 20
 
 
+class MockApp(App):
+    """Mock application for testing."""
+
+    def update(self) -> None:
+        """Display application information to screen."""
+        _start_x = 50
+        _start_y = 50
+        self.write_text("App info:", _start_x, _start_y)
+        self.write_text(f"Name: {self._name}", _start_x, _start_y * 3)
+        self.write_text(f"Width: {self._width}", _start_x, _start_y * 4)
+        self.write_text(f"Height: {self._height}", _start_x, _start_y * 5)
+        self.write_text(f"Font: {self._font}", _start_x, _start_y * 6)
+        self.write_text(f"Font size: {self._font_size}", _start_x, _start_y * 7)
+        self.write_text(f"FPS: {self._clock.get_fps()}", _start_x, _start_y * 9)
+
+
 @pytest.fixture
-def app() -> App:
-    """Mock FlappyBirdApp instance."""
-    return App(
+def app() -> MockApp:
+    """Mock App instance."""
+    return MockApp(
         name=MOCK_NAME,
         width=MOCK_WIDTH,
         height=MOCK_HEIGHT,
@@ -57,7 +73,7 @@ def mock_pygame_init() -> Generator[MagicMock]:
 
 
 @pytest.fixture
-def configured_app(app: App, mock_display_set_mode: MagicMock, mock_sys_font: MagicMock) -> App:
+def configured_app(app: MockApp, mock_display_set_mode: MagicMock, mock_sys_font: MagicMock) -> App:
     """Configured App instance."""
     app._configure()
     app._clock = MagicMock()
@@ -67,7 +83,7 @@ def configured_app(app: App, mock_display_set_mode: MagicMock, mock_sys_font: Ma
 class TestApp:
     """Unit tests for the App class."""
 
-    def test_initialization(self, app: App) -> None:
+    def test_initialization(self, app: MockApp) -> None:
         """Test App initialization."""
         assert app._name == MOCK_NAME
         assert app._width == MOCK_WIDTH
@@ -81,7 +97,7 @@ class TestApp:
         self, mock_pygame_init: MagicMock, mock_display_set_mode: MagicMock, mock_sys_font: MagicMock
     ) -> None:
         """Test App.create_app class method."""
-        app = App.create_app(
+        app = MockApp.create_app(
             name=MOCK_NAME,
             width=MOCK_WIDTH,
             height=MOCK_HEIGHT,
@@ -101,12 +117,16 @@ class TestApp:
         assert app._font == MOCK_FONT
         assert app._font_size == MOCK_FONT_SIZE
 
-    def test_screen_property(self, configured_app: App) -> None:
+    def test_screen_property(self, configured_app: MockApp) -> None:
         """Test screen property."""
         assert configured_app.screen is configured_app._display_surf
 
     def test_configure(
-        self, app: App, mock_display_set_mode: MagicMock, mock_display_set_caption: MagicMock, mock_sys_font: MagicMock
+        self,
+        app: MockApp,
+        mock_display_set_mode: MagicMock,
+        mock_display_set_caption: MagicMock,
+        mock_sys_font: MagicMock,
     ) -> None:
         """Test _configure method."""
         app._configure()
@@ -115,7 +135,7 @@ class TestApp:
         mock_display_set_mode.assert_called_once_with((MOCK_WIDTH, MOCK_HEIGHT))
         mock_sys_font.assert_called_once_with(MOCK_FONT, MOCK_FONT_SIZE)
 
-    def test_write_text(self, configured_app: App) -> None:
+    def test_write_text(self, configured_app: MockApp) -> None:
         """Test write_text method."""
         mock_text = "Test Text"
         mock_x = 100
@@ -130,7 +150,7 @@ class TestApp:
         configured_app._pg_font.render.assert_called_once_with(mock_text, 1, (255, 255, 255))
         configured_app._display_surf.blit.assert_called_once_with(mock_rendered_text, (mock_x, mock_y))
 
-    def test_update(self, configured_app: App) -> None:
+    def test_update(self, configured_app: MockApp) -> None:
         """Test update method."""
         configured_app.write_text = MagicMock()  # type: ignore[method-assign]
         configured_app._clock = MagicMock()
